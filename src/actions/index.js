@@ -1,10 +1,11 @@
-export const INCREMENT = 'INCREMENT';
-export const DECREMENT = 'DECREMENT';
+import axios from 'axios'
+import apiKey from '../apiKey'
 
-export const increment = () => ({
-	type: INCREMENT
-});
+export const READ_EVENTS = 'READ_EVENTS'
 
-export const decrement = () => ({
-	type: DECREMENT
-});
+const ROOT_URL = 'https://opendata.resas-portal.go.jp/api/v1'
+
+export const readEvents = () => async dispatch => {
+	const responese = await axios.get(`${ROOT_URL}/prefectures`,{headers: { 'X-API-KEY': apiKey }})
+	dispatch({type: 'READ_EVENTS', responese})
+};
