@@ -49,6 +49,7 @@ class EventsIndex extends Component {
 			  })
 		  }
 		}
+
 	componentDidMount() {
 		this.props.readEvents()
 	}
@@ -66,9 +67,25 @@ class EventsIndex extends Component {
 		))
 	}
 	render() {
+		const options = {
+			title: {
+				text: '都道府県別の総人口推移グラフ'
+			},
+			plotOptions: {
+				series: {
+					label: {
+						connectorAllowed: false
+					},
+					pointInterval: 5,
+					pointStart: 1965
+				}
+			},
+			series: this.state.series
+		}
 		return (
 			<React.Fragment>
 				{ this.renderEvents() }
+				<HighchartsReact highcharts={Highcharts} options={options} />
 			</React.Fragment>
 		);
 	}
