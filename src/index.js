@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import './index.css';
 import reducer from './reducers';
 
-import EventsIndex from './components/events_index';
+import EventsIndex from './components/eventsIndex';
 import * as serviceWorker from './serviceWorker';
 
 const store = createStore(reducer, applyMiddleware(thunk))
