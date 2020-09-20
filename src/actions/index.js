@@ -7,5 +7,6 @@ const ROOT_URL = 'https://opendata.resas-portal.go.jp/api/v1'
 
 export const readEvents = () => async dispatch => {
 	const responese = await axios.get(`${ROOT_URL}/prefectures`,{headers: { 'X-API-KEY': apiKey }})
+	console.log(responese);
 	dispatch({type: 'READ_EVENTS', responese})
 };

@@ -1,1 +1,1 @@
-export default 'UiLV5ETq8jfzkZKse47tG6dsUOUDJV12c5TXYJmP';
+export default process.env.REACT_APP_APY_KEY
