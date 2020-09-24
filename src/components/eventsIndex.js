@@ -1,25 +1,21 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash'
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-
-
-import { readEvents } from '../actions/index.js';
+import { readEvents, checkEvents, uncheckEvents } from '../actions/index.js';
 import apiKey from '../apiKey'
+import Chart from '../highChart.js'
 
 class EventsIndex extends Component {
-
 	constructor(props) {
-		super(props);
-		this.state = {
-			selected: false,
-			series: []
-		};
-		this.handleInputChange = this.handleInputChange.bind(this);
-	}	
+		super(props)
+		this.checkEvents = this.checkEvents.bind(this)
+	}
 
-	handleInputChange(event) {
+	componentDidMount() {
+		this.props.readEvents()
+	}
+
+	async checkEvents(event) {
 		const target = event.target;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 		if (value) {
@@ -29,29 +25,19 @@ class EventsIndex extends Component {
 					headers: { 'X-API-KEY': apiKey }
 				}
 			)
-			.then(response => response.json())
-			.then(res => {
-				let tmp = [];
-				res.result.data.find(re => re.label === "総人口").data.forEach(i => {tmp.push(i.value)});
-				const res_series = {
-					name: target.name,
-					data: tmp
-				};
-				this.setState({
-					series: [...this.state.series, res_series]
-				})
-				console.log(this.state.series);
-			})
-		  } else {
-			  let targetName = this.state.series.find( item => item.name === target.name)
-			  this.setState({
-				  series: this.state.series.filter(n => n !== targetName)
-			  })
-		  }
+				.then(response => response.json())
+				.then(res => {
+					let tmp = [];
+					res.result.data.find(re => re.label === "総人口").data.forEach(i => {tmp.push(i.value)});
+					const res_series = {
+						name: this.props.events[target.name].prefName,
+						data: tmp
+					};
+					this.props.checkEvents(res_series, target)
+				});
+		} else {
+			this.props.uncheckEvents(this.props.events[target.name].prefName)
 		}
-
-	componentDidMount() {
-		this.props.readEvents()
 	}
 
 	renderEvents() {
@@ -61,38 +47,22 @@ class EventsIndex extends Component {
 				<input
 				name={event.prefCode}
 				type="checkbox"
-				checked={this.state.isGoing}
-				onChange={this.handleInputChange}/>
+				onChange={this.checkEvents}/>
 			</div>
 		))
 	}
 	render() {
-		const options = {
-			title: {
-				text: '都道府県別の総人口推移グラフ'
-			},
-			plotOptions: {
-				series: {
-					label: {
-						connectorAllowed: false
-					},
-					pointInterval: 5,
-					pointStart: 1965
-				}
-			},
-			series: this.state.series
-		}
 		return (
 			<React.Fragment>
 				{ this.renderEvents() }
-				<HighchartsReact highcharts={Highcharts} options={options} />
+				<Chart />
 			</React.Fragment>
 		);
 	}
 }
 
-const mapStateToProps = state => ({ events: state.events})
+const mapStateToProps = state => ({ events: state.events })
 
-const mapDispatchToProps = ({ readEvents })
+const mapDispatchToProps = ({ readEvents, checkEvents, uncheckEvents })
 
 export default connect(mapStateToProps,mapDispatchToProps)(EventsIndex);
