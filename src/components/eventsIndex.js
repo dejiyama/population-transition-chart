@@ -17,8 +17,7 @@ class EventsIndex extends Component {
 
 	async checkEvents(event) {
 		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
-		if (value) {
+		if (target.checked) {
 			fetch(
 				`https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${target.name}`,
 				{
@@ -28,8 +27,8 @@ class EventsIndex extends Component {
 				.then(response => response.json())
 				.then(res => {
 					let tmp = [];
-					res.result.data.find(re => re.label === "総人口").data.forEach(i => {tmp.push(i.value)});
-					const res_series = {
+					res.result.data.find(re => re.label === "総人口").data.forEach(i => tmp.push(i.value));
+					let res_series = {
 						name: this.props.events[target.name].prefName,
 						data: tmp
 					};
