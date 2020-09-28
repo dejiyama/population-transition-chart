@@ -18,6 +18,7 @@ class EventsIndex extends Component {
 	async checkEvents(event) {
 		const target = event.target;
 		if (target.checked) {
+			target.disabled = true
 			fetch(
 				`https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=${target.name}`,
 				{
@@ -32,7 +33,8 @@ class EventsIndex extends Component {
 						name: this.props.events[target.name].prefName,
 						data: tmp
 					};
-					this.props.checkEvents(res_series, target)
+					this.props.checkEvents(res_series, target);
+					target.disabled = false
 				});
 		} else {
 			this.props.uncheckEvents(this.props.events[target.name].prefName)
@@ -46,6 +48,7 @@ class EventsIndex extends Component {
 				<input
 				name={event.prefCode}
 				type="checkbox"
+				disabled={ false }
 				onChange={this.checkEvents}/>
 			</div>
 		))
