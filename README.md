@@ -14,4 +14,5 @@
 ## 使用ライブラリ
 
 -   [React.js](https://github.com/facebook/react)
+-   [Redux](https://github.com/reduxjs/redux)
 -   [Highcharts-react](https://github.com/highcharts/highcharts-react)
